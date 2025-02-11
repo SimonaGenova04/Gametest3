@@ -1,11 +1,56 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="bg">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>Game</title>
+    <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-    
+    <canvas id="gameCanvas"></canvas>
+    <script>
+        const canvas = document.getElementById("gameCanvas");
+        const ctx = canvas.getContext("2d");
+        canvas.width = 400;
+        canvas.height = 400;
+
+        let player = { x: 200, y: 200, size: 20, speed: 5 };
+        let direction = { x: 0, y: 0 };
+
+        document.addEventListener("keydown", (event) => {
+            if (event.key === "ArrowLeft") direction.x = -player.speed;
+            if (event.key === "ArrowRight") direction.x = player.speed;
+            if (event.key === "ArrowUp") direction.y = -player.speed;
+            if (event.key === "ArrowDown") direction.y = player.speed;
+        });
+
+        document.addEventListener("keyup", (event) => {
+            if (event.key === "ArrowLeft" || event.key === "ArrowRight") direction.x = 0;
+            if (event.key === "ArrowUp" || event.key === "ArrowDown") direction.y = 0;
+        });
+
+        function draw() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            ctx.fillStyle = "blue";
+            ctx.fillRect(player.x, player.y, player.size, player.size);
+        }
+
+        function update() {
+            player.x += direction.x;
+            player.y += direction.y;
+            if (player.x < 0) player.x = 0;
+            if (player.x + player.size > canvas.width) player.x = canvas.width - player.size;
+            if (player.y < 0) player.y = 0;
+            if (player.y + player.size > canvas.height) player.y = canvas.height - player.size;
+        }
+
+        function gameLoop() {
+            update();
+            draw();
+            requestAnimationFrame(gameLoop);
+        }
+
+        gameLoop();
+    </script>
 </body>
 </html>
